@@ -5,10 +5,10 @@ folder).
 
 ```
 mvn install:install-file \
-> -Dfile=jolie.jar \
-> -DgroupId=org.jolie \
-> -DartifactId=jolie \
-> -Dversion=1.X.Y-next \
-> -Dpackaging=jar \
-> -DgeneratePom=true
+ -Dfile=jolie.jar \
+ -DgroupId=org.jolie \
+ -DartifactId=jolie \
+ -Dversion=1.X.Y-next \
+ -Dpackaging=jar \
+ -DgeneratePom=true
 ```
