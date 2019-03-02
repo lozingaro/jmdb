@@ -37,6 +37,8 @@ import org.json.simple.parser.ParseException;
  */
 public class DriverService extends JavaService {
 
+    MongoClient mongoClient = MongoClients.create( "mongodb://127.0.0.1:27017" );
+
     /**
      *
      * @param request
@@ -54,7 +56,6 @@ public class DriverService extends JavaService {
         String jsonData = request.getFirstChild( "data" ).strValue();
         String aggregationQuery = request.getFirstChild( "query" ).strValue();
 
-        MongoClient mongoClient = MongoClients.create( "mongodb://127.0.0.1:27017" );
         MongoDatabase mongoDatabase = mongoClient.getDatabase( databaseName );
         MongoCollection<Document> mongoCollection = mongoDatabase.getCollection( collectionName );
 
