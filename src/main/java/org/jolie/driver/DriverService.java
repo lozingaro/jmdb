@@ -37,15 +37,6 @@ import org.json.simple.parser.ParseException;
  */
 public class DriverService extends JavaService {
 
-    private String databaseName;
-    private String collectionName;
-    private String jsonData;
-    private String aggregationQuery;
-
-    private MongoClient mongoClient;
-    private MongoDatabase mongoDatabase;
-    private MongoCollection<Document> mongoCollection;
-
     /**
      *
      * @param request
@@ -53,19 +44,19 @@ public class DriverService extends JavaService {
      * @return
      */
     public Value query( Value request ) {
-        
+
         Logger.getLogger( "org.mongodb.driver" ).setLevel( Level.SEVERE );
 
         Value responseValue = Value.create();
 
-        databaseName = request.getFirstChild( "database" ).strValue();
-        collectionName = request.getFirstChild( "collection" ).strValue();
-        jsonData = request.getFirstChild( "data" ).strValue();
-        aggregationQuery = request.getFirstChild( "query" ).strValue();
+        String databaseName = request.getFirstChild( "database" ).strValue();
+        String collectionName = request.getFirstChild( "collection" ).strValue();
+        String jsonData = request.getFirstChild( "data" ).strValue();
+        String aggregationQuery = request.getFirstChild( "query" ).strValue();
 
-        mongoClient = MongoClients.create( "mongodb://127.0.0.1:27017" );
-        mongoDatabase = mongoClient.getDatabase( databaseName );
-        mongoCollection = mongoDatabase.getCollection( collectionName );
+        MongoClient mongoClient = MongoClients.create( "mongodb://127.0.0.1:27017" );
+        MongoDatabase mongoDatabase = mongoClient.getDatabase( databaseName );
+        MongoCollection<Document> mongoCollection = mongoDatabase.getCollection( collectionName );
 
         JSONParser parser = new JSONParser();
         try {
