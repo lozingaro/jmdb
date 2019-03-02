@@ -15,6 +15,7 @@
             <groupId>org.jolie</groupId>
             <artifactId>jolie</artifactId>
             <version>1.X.Y-next</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
