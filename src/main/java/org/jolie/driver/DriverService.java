@@ -20,9 +20,16 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
-import org.bson.Document;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -30,52 +37,55 @@ import org.bson.Document;
  */
 public class DriverService extends JavaService {
 
-    public Value insert( Value requestValue ) {
+    private String databaseName;
+    private String collectionName;
+    private String jsonData;
+    private String aggregationQuery;
+
+    private MongoClient mongoClient;
+    private MongoDatabase mongoDatabase;
+    private MongoCollection<Document> mongoCollection;
+
+    /**
+     *
+     * @param request
+     *
+     * @return
+     */
+    public Value query( Value request ) {
+        
+        Logger.getLogger( "org.mongodb.driver" ).setLevel( Level.SEVERE );
+
         Value responseValue = Value.create();
 
-        String databaseName = requestValue.getFirstChild( "database" ).strValue();
-        String collectionName = requestValue.getFirstChild( "collection" ).strValue();
-        String data = requestValue.getFirstChild( "data" ).strValue();
-        String cleanData = data.substring( data.indexOf( "[" ) + 1, data.lastIndexOf( "]" ) );
+        databaseName = request.getFirstChild( "database" ).strValue();
+        collectionName = request.getFirstChild( "collection" ).strValue();
+        jsonData = request.getFirstChild( "data" ).strValue();
+        aggregationQuery = request.getFirstChild( "query" ).strValue();
 
-        MongoClient client = MongoClients.create( "mongodb://127.0.0.1:27017" );
-        MongoDatabase database = client.getDatabase( databaseName );
-        MongoCollection<Document> collection = database.getCollection( collectionName );
+        mongoClient = MongoClients.create( "mongodb://127.0.0.1:27017" );
+        mongoDatabase = mongoClient.getDatabase( databaseName );
+        mongoCollection = mongoDatabase.getCollection( collectionName );
 
-        Document dataDocument = Document.parse( cleanData );
-        collection.insertOne( dataDocument );
+        JSONParser parser = new JSONParser();
+        try {
+            JSONArray list = ( JSONArray ) parser.parse( jsonData );
+            Iterator i = list.iterator();
 
-        return responseValue;
-    }
+            while ( i.hasNext() ) {
+                JSONObject element = ( JSONObject ) i.next();
+                Document document = Document.parse( element.toJSONString() );
+                mongoCollection.insertOne( document );
+            }
+        } catch ( ParseException ex ) {
+        }
 
-    public Value query( Value requestValue ) {
-        Value responseValue = Value.create();
-
-        String databaseName = requestValue.getFirstChild( "database" ).strValue();
-        String query = requestValue.getFirstChild( "query" ).strValue();
-
-        MongoClient client = MongoClients.create( "mongodb://127.0.0.1:27017" );
-        MongoDatabase database = client.getDatabase( databaseName );
-
-        Document command = Document.parse( query );
-        Document result = database.runCommand( command );
+        Document command = Document.parse( aggregationQuery );
+        Document result = mongoDatabase.runCommand( command );
 
         responseValue.getFirstChild( "result" ).setValue( result.toJson() );
 
-        return responseValue;
-    }
-
-    public Value delete( Value requestValue ) {
-        Value responseValue = Value.create();
-
-        String databaseName = requestValue.getFirstChild( "database" ).strValue();
-        String collectionName = requestValue.getFirstChild( "collection" ).strValue();
-
-        MongoClient client = MongoClients.create( "mongodb://127.0.0.1:27017" );
-        MongoDatabase database = client.getDatabase( databaseName );
-        MongoCollection<Document> collection = database.getCollection( collectionName );
-
-        collection.drop();
+        mongoCollection.drop();
 
         return responseValue;
     }
