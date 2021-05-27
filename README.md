@@ -1,14 +1,8 @@
 # Java Service MongoDB Drivers for Jolie
 
-To add **Jolie** to your local Maven repository (from the `jolie` project
-folder).
+Ephemeral Handling of data with mongodb, a Java Service driver for Jolie embedding purpose.
 
-```
-mvn install:install-file \
- -Dfile=jolie.jar \
- -DgroupId=org.jolie \
- -DartifactId=jolie \
- -Dversion=1.X.Y-next \
- -Dpackaging=jar \
- -DgeneratePom=true
-```
+## Requirements
+
+1. OpenJDK Runtime Environment (build 11.0.10+9)
+2. Apache Maven 3.8.1
