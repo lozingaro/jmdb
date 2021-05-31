@@ -49,7 +49,7 @@ public class DriverServiceNGTest {
      */
     @org.testng.annotations.Test
     public void testQuery() {
-        System.out.println( "query" );
+        // System.out.println( "query" );
         Value requestValue = Value.create();
         requestValue.getFirstChild( "database" ).setValue( "biometrics" );
         requestValue.getFirstChild( "collection" ).setValue( "collection_1" );

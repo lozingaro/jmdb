@@ -5,24 +5,21 @@
     <artifactId>jolie-mongodb-driver</artifactId>
     <version>1.0.2</version>
     <packaging>jar</packaging>
-    <repositories>
-        <repository>
-            <id>github</id>
-			<name>GitHub Jolie Apache Maven Packages</name>
-			<url>https://maven.pkg.github.com/jolie/jolie</url>
-		</repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.jolie-lang</groupId>
-            <artifactId>libjolie</artifactId>
-            <version>1.9.1</version>
+            <artifactId>jolie</artifactId>
+            <version>1.10.0</version>
+            <scope>system</scope>
+            <systemPath>/home/stefanopio.zingaro/Developer/jolie-mongodb-driver/lib/jolie-1.10.0.jar</systemPath>
         </dependency> 
         <dependency>
             <groupId>org.jolie-lang</groupId>
             <artifactId>libjolie</artifactId>
-            <version>1.9.1</version>
-        </dependency>  
+            <version>1.10.0</version>
+            <scope>system</scope>
+            <systemPath>/home/stefanopio.zingaro/Developer/jolie-mongodb-driver/lib/libjolie-1.10.0.jar</systemPath>
+        </dependency> 
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-sync</artifactId>
