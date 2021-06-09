@@ -20,16 +20,15 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+
 import org.bson.Document;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import jolie.runtime.JavaService;
-import jolie.runtime.Value;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import jolie.runtime.JavaService;
+import jolie.runtime.Value;
 
 /**
  *
@@ -38,31 +37,35 @@ import org.json.simple.parser.ParseException;
 public class DriverService extends JavaService {
 
     MongoClient mongoClient = MongoClients.create( "mongodb://127.0.0.1:27017" );
+    
+    public final static String DATABASE = "database";
+    public final static String COLLECTION = "collection";
+    public final static String DATA = "data";
+    public final static String QUERY = "query";
+    public final static String RESULT = "result";
 
     /**
      *
      * @param request
      *
-     * @return
+     * @return responseValue
      */
     public Value query( Value request ) {
 
-        Logger.getLogger( "org.mongodb.driver" ).setLevel( Level.SEVERE );
+        MongoDatabase mongoDatabase = mongoClient.getDatabase( 
+            request.getFirstChild( DATABASE ).strValue()
+            );
 
-        Value responseValue = Value.create();
+        MongoCollection<Document> mongoCollection = mongoDatabase.getCollection( 
+          request.getFirstChild( COLLECTION ).strValue()
+          );
 
-        String databaseName = request.getFirstChild( "database" ).strValue();
-        String collectionName = request.getFirstChild( "collection" ).strValue();
-        String jsonData = request.getFirstChild( "data" ).strValue();
-        String aggregationQuery = request.getFirstChild( "query" ).strValue();
-
-        MongoDatabase mongoDatabase = mongoClient.getDatabase( databaseName );
-        MongoCollection<Document> mongoCollection = mongoDatabase.getCollection( collectionName );
+        String jsonData = request.getFirstChild( DATA ).strValue();
 
         JSONParser parser = new JSONParser();
         try {
             JSONArray list = ( JSONArray ) parser.parse( jsonData );
-            Iterator i = list.iterator();
+            var i = list.iterator();
 
             while ( i.hasNext() ) {
                 JSONObject element = ( JSONObject ) i.next();
@@ -72,13 +75,36 @@ public class DriverService extends JavaService {
         } catch ( ParseException ex ) {
         }
 
-        Document command = Document.parse( aggregationQuery );
-        Document result = mongoDatabase.runCommand( command );
+        Document command = Document.parse(
+            request.getFirstChild( QUERY ).strValue()
+            );
+        
+        Value responseValue = Value.create();
 
-        responseValue.getFirstChild( "result" ).setValue( result.toJson() );
+        responseValue.getFirstChild( RESULT ).setValue(
+            mongoDatabase.runCommand( command ).toJson()
+            );
 
-        mongoCollection.drop();
+        return responseValue;
+    }
 
+    /**
+     *
+     * @param request
+     *
+     * @return responseValue
+     */
+    public Value drop( Value request ) {
+
+        MongoDatabase mongoDatabase = mongoClient.getDatabase( 
+            request.getFirstChild( DATABASE ).strValue()
+            );
+        
+        mongoDatabase.getCollection( 
+        request.getFirstChild( COLLECTION ).strValue()
+        ).drop();
+
+        Value responseValue = Value.create();
         return responseValue;
     }
 }
