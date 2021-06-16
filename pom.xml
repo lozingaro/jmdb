@@ -34,16 +34,12 @@
         <dependency>
             <groupId>org.jolie-lang</groupId>
             <artifactId>jolie</artifactId>
-            <version>1.10.0</version>
-            <scope>system</scope>
-            <systemPath>/home/stefanopio.zingaro/Developer/jolie-mongodb-driver/lib/jolie-1.10.0.jar</systemPath>
+            <version>1.10.4</version>
         </dependency> 
         <dependency>
             <groupId>org.jolie-lang</groupId>
             <artifactId>libjolie</artifactId>
-            <version>1.10.0</version>
-            <scope>system</scope>
-            <systemPath>/home/stefanopio.zingaro/Developer/jolie-mongodb-driver/lib/libjolie-1.10.0.jar</systemPath>
+            <version>1.10.4</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.mongodb/bson -->
         <dependency>
@@ -73,6 +69,19 @@
             <artifactId>testng</artifactId>
             <version>6.8.1</version>
             <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.30</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.30</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
    <properties>
