@@ -30,6 +30,9 @@ import org.json.simple.parser.ParseException;
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 
+import javax.print.Doc;
+import java.util.List;
+
 /**
  *
  * @author stefanopiozingaro
@@ -62,18 +65,26 @@ public class DriverService extends JavaService {
 
         String jsonData = request.getFirstChild( DATA ).strValue();
 
-        JSONParser parser = new JSONParser();
-        try {
-            JSONArray list = ( JSONArray ) parser.parse( jsonData );
-            var i = list.iterator();
+        List< Document > data = ( List< Document > ) Document
+                .parse( "{ \"data\" : " + jsonData + " } " )
+                .get( "data" );
 
-            while ( i.hasNext() ) {
-                JSONObject element = ( JSONObject ) i.next();
-                Document document = Document.parse( element.toJSONString() );
-                mongoCollection.insertOne( document );
-            }
-        } catch ( ParseException ex ) {
-        }
+        mongoCollection.insertMany( data );
+
+
+
+//        JSONParser parser = new JSONParser();
+//        try {
+//            JSONArray list = ( JSONArray ) parser.parse( jsonData );
+//            var i = list.iterator();
+//
+//            while ( i.hasNext() ) {
+//                JSONObject element = ( JSONObject ) i.next();
+//                Document document = Document.parse( element.toJSONString() );
+//                mongoCollection.insertOne( document );
+//            }
+//        } catch ( ParseException ex ) {
+//        }
 
         Document command = Document.parse(
             request.getFirstChild( QUERY ).strValue()
