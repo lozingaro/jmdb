@@ -16,22 +16,18 @@
  */
 package org.jolie.driver;
 
+import java.util.List;
+
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 import org.bson.Document;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
-
-import javax.print.Doc;
-import java.util.List;
+import jolie.runtime.ValueVector;
 
 /**
  *
@@ -43,7 +39,8 @@ public class DriverService extends JavaService {
     
     public final static String DATABASE = "database";
     public final static String COLLECTION = "collection";
-    public final static String DATA = "data";
+    public final static String COLLECTION_NAME = "name";
+    public final static String COLLECTION_DATA = "data";
     public final static String QUERY = "query";
     public final static String RESULT = "result";
 
@@ -52,50 +49,46 @@ public class DriverService extends JavaService {
      * @param request
      *
      * @return responseValue
+     * 
+     * TODO:
+     * 1. per ogni collection fai insert many
+     *  1.1. faccio parsing
+     *  1.2. faccio insert many su collection_i
+     * 2. per ogni query eseguo e ritorno il risultato dell'ultima 
      */
     public Value query( Value request ) {
 
-        MongoDatabase mongoDatabase = mongoClient.getDatabase( 
-            request.getFirstChild( DATABASE ).strValue()
-            );
+        String db_name = request.getFirstChild( DATABASE ).strValue();
+        MongoDatabase db = mongoClient.getDatabase( db_name );
 
-        MongoCollection<Document> mongoCollection = mongoDatabase.getCollection( 
-          request.getFirstChild( COLLECTION ).strValue()
-          );
+        ValueVector collections = request.getChildren( COLLECTION );
 
-        String jsonData = request.getFirstChild( DATA ).strValue();
+        for (int i = 0; i < collections.size(); i++) {
 
-        List< Document > data = ( List< Document > ) Document
-                .parse( "{ \"data\" : " + jsonData + " } " )
-                .get( "data" );
+            String collection_name = collections.get( i ).getFirstChild( COLLECTION_NAME ).strValue();
+            
+            String data = collections.get( i ).getFirstChild( COLLECTION_DATA ).strValue();
 
-        mongoCollection.insertMany( data );
+            List< Document > documents = ( List< Document > ) Document.parse( "{ \"data\" : " + data + " } " ).get( "data" );
+            
+            MongoCollection<Document> collection = db.getCollection( collection_name );
+            collection.insertMany( documents );
 
+        }
 
+        ValueVector queries = request.getChildren( QUERY );
 
-//        JSONParser parser = new JSONParser();
-//        try {
-//            JSONArray list = ( JSONArray ) parser.parse( jsonData );
-//            var i = list.iterator();
-//
-//            while ( i.hasNext() ) {
-//                JSONObject element = ( JSONObject ) i.next();
-//                Document document = Document.parse( element.toJSONString() );
-//                mongoCollection.insertOne( document );
-//            }
-//        } catch ( ParseException ex ) {
-//        }
+        String commandResponse = "";
+        for (int i = 0; i < queries.size(); i++) {
 
-        Document command = Document.parse(
-            request.getFirstChild( QUERY ).strValue()
-            );
+            String query = queries.get( i ).strValue();
+            Document command = Document.parse( query );
+            commandResponse = db.runCommand( command ).toJson();
         
+        }
+
         Value responseValue = Value.create();
-
-        responseValue.getFirstChild( RESULT ).setValue(
-            mongoDatabase.runCommand( command ).toJson()
-            );
-
+        responseValue.getFirstChild( RESULT ).setValue( commandResponse );
         return responseValue;
     }
 
@@ -107,14 +100,19 @@ public class DriverService extends JavaService {
      */
     public Value drop( Value request ) {
 
-        MongoDatabase mongoDatabase = mongoClient.getDatabase( 
-            request.getFirstChild( DATABASE ).strValue()
-            );
-        
-        mongoDatabase.getCollection( 
-        request.getFirstChild( COLLECTION ).strValue()
-        ).drop();
+        String db_name = request.getFirstChild( DATABASE ).strValue();
+        MongoDatabase db = mongoClient.getDatabase( db_name );
 
+        ValueVector collections = request.getChildren( COLLECTION );
+
+        for (int i = 0; i < collections.size(); i++) {
+
+            String collection_name = collections.get( i ).strValue();
+            MongoCollection<Document> collection = db.getCollection( collection_name );
+            collection.drop();
+        
+        }
+        
         Value responseValue = Value.create();
         return responseValue;
     }
