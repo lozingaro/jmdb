@@ -75,8 +75,7 @@ public class DriverServiceNGTest {
       Value.create(sleeplog_query)
      );
     
-    Value response = new DriverService().query( request );
-    System.out.println( response.getFirstChild( DriverService.RESULT ).strValue() );
+    new DriverService().query( request );
   }
   
   /**

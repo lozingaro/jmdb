@@ -5,31 +5,6 @@
     <artifactId>jolie-mongodb-driver</artifactId>
     <version>0.2.2</version>
     <packaging>jar</packaging>
-    <build>
-        <plugins>
-            <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <configuration>
-                <archive>
-                <manifest>
-                    <mainClass>org.jolie.driver.DriverService</mainClass>
-                </manifest>
-                </archive>
-                <descriptorRefs>
-                <descriptorRef>jar-with-dependencies</descriptorRef>
-                </descriptorRefs>
-            </configuration>
-            <executions>
-                <execution>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>single</goal>
-                    </goals>
-                </execution>
-            </executions>
-            </plugin>
-        </plugins>
-        </build>
     <dependencies>
         <dependency>
             <groupId>org.jolie-lang</groupId>
@@ -53,16 +28,11 @@
             <artifactId>mongodb-driver-core</artifactId>
             <version>4.2.3</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync -->
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-sync</artifactId>
             <version>4.2.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>

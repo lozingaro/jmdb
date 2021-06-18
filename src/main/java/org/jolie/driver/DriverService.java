@@ -49,12 +49,6 @@ public class DriverService extends JavaService {
      * @param request
      *
      * @return responseValue
-     * 
-     * TODO:
-     * 1. per ogni collection fai insert many
-     *  1.1. faccio parsing
-     *  1.2. faccio insert many su collection_i
-     * 2. per ogni query eseguo e ritorno il risultato dell'ultima 
      */
     public Value query( Value request ) {
 
