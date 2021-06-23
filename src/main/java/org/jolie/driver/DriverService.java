@@ -43,14 +43,17 @@ public class DriverService extends JavaService {
     public final static String COLLECTION_DATA = "data";
     public final static String QUERY = "query";
     public final static String RESULT = "result";
+    public final static String QUERY_TIME = "queryTime";
 
     /**
      *
      * @param request
      *
-     * @return responseValue
+     * @return response
      */
     public Value query( Value request ) {
+
+        long start = System.currentTimeMillis();
 
         String db_name = request.getFirstChild( DATABASE ).strValue();
         MongoDatabase db = mongoClient.getDatabase( db_name );
@@ -81,18 +84,21 @@ public class DriverService extends JavaService {
         
         }
 
-        Value responseValue = Value.create();
-        responseValue.getFirstChild( RESULT ).setValue( commandResponse );
-        return responseValue;
+        Value response = Value.create();
+        response.getFirstChild( RESULT ).setValue( commandResponse );
+        response.getFirstChild( QUERY_TIME ).setValue( System.currentTimeMillis() - start );
+        return response;
     }
 
     /**
      *
      * @param request
      *
-     * @return responseValue
+     * @return response
      */
     public Value drop( Value request ) {
+
+        long start = System.currentTimeMillis();
 
         String db_name = request.getFirstChild( DATABASE ).strValue();
         MongoDatabase db = mongoClient.getDatabase( db_name );
@@ -107,7 +113,8 @@ public class DriverService extends JavaService {
         
         }
         
-        Value responseValue = Value.create();
-        return responseValue;
+        Value response = Value.create();
+        response.getFirstChild( QUERY_TIME ).setValue( System.currentTimeMillis() - start );
+        return response;
     }
 }

@@ -76,7 +76,8 @@ public class DriverServiceNGTest {
      );
     
     Value response = new DriverService().query( request );
-    // System.out.println( response.getFirstChild( DriverService.RESULT ).strValue() );
+    System.out.println( response.getFirstChild( DriverService.RESULT ).strValue() );
+    System.out.println( response.getFirstChild( DriverService.QUERY_TIME ).longValue() );
   }
   
   /**
@@ -97,6 +98,7 @@ public class DriverServiceNGTest {
       Value.create( "collection_0_sleeplog" )
     );
 
-    new DriverService().drop( request );
+    Value response = new DriverService().drop( request );
+    System.out.println( response.getFirstChild( DriverService.QUERY_TIME ).longValue() );
   }
 }
