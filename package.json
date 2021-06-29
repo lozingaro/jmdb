@@ -1,6 +1,6 @@
 {
   "name": "jolie-mongodb-driver",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "The library wraps two operations of the MongoDB framework and allows to embed those as a Microservice in a Jolie program.",
   "main": "",
   "scripts": {
