@@ -1,6 +1,6 @@
 {
     "name": "jolie-mongodb-driver",
-    "version": "@VERSION@",
+    "version": "0.3.6",
     "description": "The library wraps two operations of the MongoDB framework and allows to embed those as a Microservice in a Jolie program.",
     "collaborators": [
        "Stefano P. Zingaro"
@@ -15,7 +15,7 @@
        "jolive": "npx nodemon --exec jolie ./server.ol",
        "clean": "rm ./hs_err_pid*"
     },
-    "distJar": "jolie-mongodb-driver-@VERSION@.jar",
+    "distJar": "jolie-mongodb-driver-0.3.6.jar",
     "dependencies": {
        "mvn": {
             "org.mongodb:bson": "4.2.3",

@@ -1,9 +1,12 @@
 .github/
 .vscode/
+.gradle
+build/
+gradle/
 src/
 target/
-packages/
 .gitignore
-package-lock.json
-package.json
-pom.xml
+build.gradle
+gradlew
+gradlew.bat
+settings.gradle
