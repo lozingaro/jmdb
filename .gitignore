@@ -60,3 +60,4 @@ nb-configuration.xml
 ##########################
 .DS_Store
 .vscode
+package-lock.json
