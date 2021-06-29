@@ -20,10 +20,10 @@ To compile the project, I used the following:
 
 To install the drivers use `jpm`available via `npm install -g jpm` using `Node`:
 
-`jpm add szingaro/jolie-mongodb-driver`
+`jpm add jolie-mongodb-driver`
 
 ## Usage
 
 Insert at the beginning of your Jolie service the following:
 
-`from szingaro.jolie-mongodb-driver.main import MongoDBDriver`
+`from jolie-mongodb-driver.main import MongoDBDriver`
