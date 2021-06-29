@@ -1,0 +1,30 @@
+{
+    "name": "jolie-mongodb-driver",
+    "version": "0.3.0",
+    "description": "The library wraps two operations of the MongoDB framework and allows to embed those as a Microservice in a Jolie program.",
+    "collaborators": [
+       "Stefano P. Zingaro"
+    ],
+    "license": "LGPL-2.1-only",
+    "keywords": [
+        "jolie",
+        "microservices",
+        "mongodb"
+    ],
+    "scripts": {
+       "jolive": "npx nodemon --exec jolie ./server.ol",
+       "clean": "rm ./hs_err_pid*"
+    },
+    "distJar": "jolie-mongodb-driver-0.3.0.jar",
+    "dependencies": {
+       "mvn": {
+            "org.mongodb:bson": "4.2.3",
+            "org.mongodb:mongodb-driver-core": "4.2.3",
+            "org.mongodb:mongodb-driver-sync": "4.2.3",
+            "org.slf4j:slf4j-api": "1.7.30",
+            "org.slf4j:slf4j-simple": "1.7.30"
+        },
+        "npm": {}
+    }
+ }
+ 
