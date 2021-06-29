@@ -18,6 +18,7 @@ package org.jolie.driver;
 
 import java.util.List;
 
+import com.mongodb.MongoSocketOpenException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -25,6 +26,7 @@ import com.mongodb.client.MongoDatabase;
 
 import org.bson.Document;
 
+import jolie.runtime.FaultException;
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 import jolie.runtime.ValueVector;
@@ -35,8 +37,6 @@ import jolie.runtime.ValueVector;
  */
 public class DriverService extends JavaService {
 
-    MongoClient mongoClient = MongoClients.create( "mongodb://127.0.0.1:27017" );
-    
     public final static String DATABASE = "database";
     public final static String COLLECTION = "collection";
     public final static String COLLECTION_NAME = "name";
@@ -51,13 +51,21 @@ public class DriverService extends JavaService {
      *
      * @return response
      */
-    public Value query( Value request ) {
-
-        long start = System.currentTimeMillis();
+    public Value query( Value request ) throws FaultException {
 
         String db_name = request.getFirstChild( DATABASE ).strValue();
-        MongoDatabase db = mongoClient.getDatabase( db_name );
 
+        MongoDatabase db;
+        try{
+
+            MongoClient mongoClient = MongoClients.create( "mongodb://127.0.0.1:27017" );
+            db = mongoClient.getDatabase( db_name );
+
+        } catch (MongoSocketOpenException e) {
+            throw new FaultException( e.getMessage() );
+        }
+
+        long start = System.currentTimeMillis();
         ValueVector collections = request.getChildren( COLLECTION );
 
         for (int i = 0; i < collections.size(); i++) {
@@ -69,8 +77,13 @@ public class DriverService extends JavaService {
             List< Document > documents = ( List< Document > ) Document.parse( "{ \"data\" : " + data + " } " ).get( "data" );
             
             MongoCollection<Document> collection = db.getCollection( collection_name );
-            collection.insertMany( documents );
 
+            try {
+                collection.insertMany( documents );
+            } catch (Exception e) {
+                throw new FaultException( e.getMessage() );
+            }
+            
         }
 
         ValueVector queries = request.getChildren( QUERY );
@@ -95,21 +108,35 @@ public class DriverService extends JavaService {
      * @param request
      *
      * @return response
+     * @throws FaultException
      */
-    public Value drop( Value request ) {
-
-        long start = System.currentTimeMillis();
+    public Value drop( Value request ) throws FaultException {
 
         String db_name = request.getFirstChild( DATABASE ).strValue();
-        MongoDatabase db = mongoClient.getDatabase( db_name );
 
+        MongoDatabase db;
+        try{
+
+            MongoClient mongoClient = MongoClients.create( "mongodb://127.0.0.1:27017" );
+            db = mongoClient.getDatabase( db_name );
+
+        } catch (MongoSocketOpenException e) {
+            throw new FaultException( e.getMessage() );
+        }
+
+        long start = System.currentTimeMillis();
         ValueVector collections = request.getChildren( COLLECTION );
 
         for (int i = 0; i < collections.size(); i++) {
 
             String collection_name = collections.get( i ).strValue();
             MongoCollection<Document> collection = db.getCollection( collection_name );
-            collection.drop();
+
+            try {
+                collection.drop();  
+            } catch (Exception e) {
+                throw new FaultException( e.getMessage() );
+            }
         
         }
         

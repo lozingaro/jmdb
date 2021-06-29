@@ -18,6 +18,7 @@ package org.jolie.driver;
 
 import java.io.IOException;
 
+import jolie.runtime.FaultException;
 import jolie.runtime.Value;
 
 /**
@@ -75,9 +76,15 @@ public class DriverServiceNGTest {
       Value.create(sleeplog_query)
      );
     
-    Value response = new DriverService().query( request );
-    System.out.println( response.getFirstChild( DriverService.RESULT ).strValue() );
+    try {
+      Value response = new DriverService().query( request );
+      System.out.println( response.getFirstChild( DriverService.RESULT ).strValue() );
     System.out.println( response.getFirstChild( DriverService.QUERY_TIME ).longValue() );
+    } catch (FaultException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
   }
   
   /**
@@ -98,7 +105,12 @@ public class DriverServiceNGTest {
       Value.create( "collection_0_sleeplog" )
     );
 
-    Value response = new DriverService().drop( request );
-    System.out.println( response.getFirstChild( DriverService.QUERY_TIME ).longValue() );
+    try {
+      Value response = new DriverService().drop( request );
+      System.out.println( response.getFirstChild( DriverService.QUERY_TIME ).longValue() );
+    } catch (FaultException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 }

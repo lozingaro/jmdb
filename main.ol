@@ -47,8 +47,8 @@ type DropResponse    : void {
 
 interface MongoDBDriverInterface {
   RequestResponse: 
-    query( undefined )( QueryResponse ),
-    drop( undefined )( DropResponse )
+    query( undefined )( QueryResponse ) throws MongoConnectionException( string ),
+    drop( undefined )( DropResponse ) throws MongoConnectionException( string )
 }
 
 service MongoDBDriver {
