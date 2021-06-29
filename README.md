@@ -15,3 +15,15 @@ To compile the project, I used the following:
 
 1. Target `OpenJDK Runtime Environment AdoptOpenJDK-11.0.11+9 (build 11.0.11+9)`
 2. Built using `Apache Maven 3.8.1`
+
+## Installation
+
+To install the drivers use `jpm`available via `npm install -g jpm` using `Node`:
+
+`jpm add szingaro/jolie-mongodb-driver`
+
+## Usage
+
+Insert at the beginning of your Jolie service the following:
+
+`from szingaro.jolie-mongodb-driver.main import MongoDBDriver`

@@ -51,7 +51,7 @@ interface MongoDBDriverInterface {
     drop( undefined )( DropResponse )
 }
 
-service TQuery {
+service MongoDBDriver {
   inputPort IP {
     location: "local"
     interfaces: MongoDBDriverInterface
