@@ -59,6 +59,13 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
+    <distributionManagement>
+        <repository>
+          <id>github</id>
+          <name>GitHub OWNER Apache Maven Packages</name>
+          <url>https://maven.pkg.github.com/szingaro/jolie-mongodb-driver</url>
+        </repository>   
+    </distributionManagement>
     <name>Jolie MongoDB Driver</name>
     <description>Ephemeral Handling of data with mongodb, a Java Service driver for Jolie embedding purpose.</description>
 </project>

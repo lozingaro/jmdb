@@ -1,5 +1,9 @@
+.github/
 .vscode/
 src/
 target/
 packages/
+.gitignore
+package-lock.json
+package.json
 pom.xml
